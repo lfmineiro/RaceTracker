@@ -1,0 +1,63 @@
+// backend-app/prisma/schema.prisma
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id             String    @id @default(uuid())
+  email          String    @unique
+  name           String
+  password       String    // Adicionado para login simples
+  stravaToken    String?
+  stravaId       String?   @unique
+  workouts       Workout[]
+  races          Race[]
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+}
+
+model Workout {
+  id               String   @id @default(uuid())
+  userId           String
+  user             User     @relation(fields: [userId], references: [id])
+  
+  date             DateTime
+  type             String   // EASY, LONG, INTERVAL, ETC
+  title            String
+  description      String?
+  
+  plannedDistance  Int?     // em metros
+  plannedDuration  Int?     // em segundos
+  
+  actualDistance   Int?
+  actualDuration   Int?
+  status           String   @default("PENDING") // PENDING, COMPLETED, SKIPPED
+  
+  stravaActivityId String?  @unique
+  
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+}
+
+model Race {
+  id                String   @id @default(uuid())
+  userId            String
+  user              User     @relation(fields: [userId], references: [id])
+  
+  name              String
+  date              DateTime
+  distance          Int
+  priorityLevel     String   
+  
+  goalTimeSeconds   Int?
+  resultTimeSeconds Int?
+  
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+}
