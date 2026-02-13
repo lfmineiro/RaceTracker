@@ -5,9 +5,8 @@ services:
     container_name: racetracker-db
     environment:
       POSTGRES_USER: admin
-      POSTGRES_PASSWORD: adminpassword
+      POSTGRES_PASSWORD: admin
       POSTGRES_DB: racetracker
-      POSTGRES_HOST_AUTH_METHOD: trust
     ports:
       - "5432:5432"
     volumes:

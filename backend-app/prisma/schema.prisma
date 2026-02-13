@@ -5,15 +5,15 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
+  provider = "sqlite"
+  url      = "file:./dev.db"
 }
 
 model User {
   id             String    @id @default(uuid())
   email          String    @unique
   name           String
-  password       String    // Adicionado para login simples
+  password       String
   stravaToken    String?
   stravaId       String?   @unique
   workouts       Workout[]
@@ -28,16 +28,16 @@ model Workout {
   user             User     @relation(fields: [userId], references: [id])
   
   date             DateTime
-  type             String   // EASY, LONG, INTERVAL, ETC
+  type             String   // Vamos validar "EASY", "LONG", etc no código
   title            String
-  description      String?
+  description      String?  // Removemos @db.Text (desnecessário no SQLite)
   
-  plannedDistance  Int?     // em metros
-  plannedDuration  Int?     // em segundos
+  plannedDistance  Int?
+  plannedDuration  Int?
   
   actualDistance   Int?
   actualDuration   Int?
-  status           String   @default("PENDING") // PENDING, COMPLETED, SKIPPED
+  status           String   @default("PENDING")
   
   stravaActivityId String?  @unique
   
@@ -53,7 +53,7 @@ model Race {
   name              String
   date              DateTime
   distance          Int
-  priorityLevel     String   
+  priorityLevel     String
   
   goalTimeSeconds   Int?
   resultTimeSeconds Int?

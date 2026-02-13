@@ -8,7 +8,7 @@ O objetivo é centralizar o planejamento e comparar com a execução real vinda 
 - **Monorepo:** NPM Workspaces
 - **Backend:** Node.js, Express, TypeScript, Prisma ORM
 - **Frontend:** React, Vite, TailwindCSS, TypeScript
-- **Database:** PostgreSQL (via Docker)
+- **Database:** SQLite
 - **Infra:** Docker Compose
 
 ---
