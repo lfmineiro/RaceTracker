@@ -1,5 +1,6 @@
 import { PrismaClient } from '@prisma/client';
 import type { Request, Response } from 'express';
+import type { WorkoutCreateInput } from '../types/workout.types.js';
 
 const prisma = new PrismaClient();
 
@@ -11,17 +12,9 @@ export const getWorkouts = async (req: Request, res: Response) => {
 }
 
 export const createWorkout = async (req: Request, res: Response) => {
-  const {userId, date, type, title, description, plannedDistance, plannedDuration} = req.body;
+  const data: WorkoutCreateInput = req.body;
   const workout = await prisma.workout.create({
-    data: {
-      userId,
-      date,
-      type,
-      title,
-      description,
-      plannedDistance,
-      plannedDuration
-    }
+    data
   })
   return res.status(201).json(workout);
 }

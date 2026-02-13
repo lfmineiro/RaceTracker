@@ -1,5 +1,6 @@
 import { PrismaClient } from "@prisma/client";
 import type { Request, Response } from "express";
+import type { UserCreateInput, UserUpdateInput } from "../types/user.types.js";
 
 const prisma = new PrismaClient();
 
@@ -16,23 +17,19 @@ export const getUserById = async (req: Request, res: Response) => {
 };
 
 export const createUser = async (req: Request, res: Response) => {
-  const {name, email, password} = req.body;
+  const data: UserCreateInput = req.body;
   const user = await prisma.user.create({
-    data: {
-      name, 
-      email,
-      password
-    }
+    data
   })
   return res.status(201).json(user);
 }
 
 export const updateUser = async (req: Request, res: Response) => {
   const { id } = req.params;
-  const { email, name, password } = req.body;
+  const data: UserUpdateInput = req.body;
   const user = await prisma.user.update({
     where: { id: String(id) },
-    data: { email, name, password }
+    data
   });
   return res.json(user);
 };
