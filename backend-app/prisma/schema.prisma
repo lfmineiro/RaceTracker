@@ -28,9 +28,9 @@ model Workout {
   user             User     @relation(fields: [userId], references: [id])
   
   date             DateTime
-  type             String   // Vamos validar "EASY", "LONG", etc no código
+  type             String  
   title            String
-  description      String?  // Removemos @db.Text (desnecessário no SQLite)
+  description      String?  
   
   plannedDistance  Int?
   plannedDuration  Int?
