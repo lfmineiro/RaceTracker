@@ -2,16 +2,18 @@ import { useState } from "react";
 import { Plus } from "lucide-react";
 import WeeklyCalendar from "../components/schedule/WeeklyCalendar";
 import WorkoutModal from "../components/schedule/WorkoutModal";
+import { useCurrentWeek } from "../hooks/useCurrentWeek";
 
 const Schedule = () => {
   const [openModal, setOpenModal] = useState(false);
+  const {startOfWeek,endOfWeek} = useCurrentWeek()
 
   return (
     <main className="flex-1 bg-slate-100 min-h-screen p-8">
       <div className="flex justify-between items-center mb-8">
         <div>
           <h1 className="text-3xl font-bold text-slate-800">
-            My Schedule - Week 12 to 18 Feb
+            My Schedule - Week {startOfWeek.toLocaleDateString()} to {endOfWeek.toLocaleDateString()} 
           </h1>
           <p className="text-slate-500 mt-1">
             Plan and track your weekly training sessions

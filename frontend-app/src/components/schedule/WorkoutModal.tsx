@@ -1,7 +1,7 @@
 import axios from 'axios'
 import { X } from "lucide-react";
 import { useState } from "react";
-import type { WorkoutCreateInput } from '../../../types/workout'
+import type { WorkoutCreateInput } from '../../types/workout'
 
 interface Props {
   onClose: () => void;
