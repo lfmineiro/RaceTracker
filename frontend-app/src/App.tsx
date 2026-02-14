@@ -5,9 +5,9 @@ import Dashboard from './pages/Dashboard';
 function App() {
   return (
     <div className="h-screen bg-slate-50 font-sans">
-      <div className="flex h-full">
+      <div className="flex h-full gap-5">
         <Sidebar />
-        <main className="flex-1 ml-64 overflow-y-auto relative z-0">
+        <main className="flex-1 ml-32 overflow-y-auto relative z-0">
           <Dashboard />
         </main>
       </div>
