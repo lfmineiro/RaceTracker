@@ -1,17 +1,24 @@
 import React from 'react';
-import Sidebar from './components/sidebar';
+import Sidebar from './components/Sidebar';
 import Dashboard from './pages/Dashboard';
+import Schedule from './pages/Schedule';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 
 function App() {
   return (
-    <div className="h-screen bg-slate-50 font-sans">
-      <div className="flex h-full gap-5">
-        <Sidebar />
-        <main className="flex-1 ml-32 overflow-y-auto relative z-0">
-          <Dashboard />
-        </main>
+    <Router>
+      <div className="h-screen bg-slate-50 font-sans">
+        <div className="flex h-full">
+          <Sidebar />
+          <main className="flex-1 overflow-y-auto relative z-0">
+            <Routes>
+              <Route path="/" element={<Dashboard />} />
+              <Route path="/schedule" element={<Schedule />} />
+            </Routes>
+          </main>
+        </div>
       </div>
-    </div>
+    </Router>
   );
 }
 
