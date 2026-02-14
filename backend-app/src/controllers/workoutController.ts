@@ -12,9 +12,40 @@ export const getWorkouts = async (req: Request, res: Response) => {
 }
 
 export const createWorkout = async (req: Request, res: Response) => {
-  const data: WorkoutCreateInput = req.body;
-  const workout = await prisma.workout.create({
-    data
-  })
-  return res.status(201).json(workout);
+  try {
+    const data: WorkoutCreateInput = req.body;
+    
+    if (!data.date) {
+      return res.status(400).json({ message: 'Date is required' });
+    }
+    if (!data.userId) {
+      return res.status(400).json({ message: 'UserId is required' });
+    }
+    if (!data.title) {
+      return res.status(400).json({ message: 'Title is required' });
+    }
+
+    const userId = String(data.userId);
+
+    const date = new Date(data.date);
+    if (isNaN(date.getTime())) {
+      return res.status(400).json({ message: 'Invalid date format' });
+    }
+
+    const workout = await prisma.workout.create({
+      data: {
+        ...data,
+        userId,
+        date,
+      }
+    });
+    
+    return res.status(201).json(workout);
+  } catch (error) {
+    console.error('Error creating workout:', error);
+    return res.status(500).json({ 
+      message: 'Error creating workout', 
+      error: error instanceof Error ? error.message : 'Unknown error'
+    });
+  }
 }
