@@ -26,3 +26,4 @@ dist-ssr
 
 prisma/dev.db
 dist/
+backend-app/prisma/dev.db
