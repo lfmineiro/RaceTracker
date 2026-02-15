@@ -4,7 +4,7 @@ import { useCurrentWeek } from "./useCurrentWeek"
 import { getDayName, isDateInRange, parseISOToLocalDate } from "../utils/dateUtils"
 
 export const useWeeklyWourkouts = () => {
-  const { workouts, loading } = useWorkouts()
+  const { workouts, loading, error, refetch } = useWorkouts()
   const { startOfWeek, endOfWeek } = useCurrentWeek()
  
 
@@ -22,5 +22,5 @@ export const useWeeklyWourkouts = () => {
     })
   }
 
-  return { currentWorkouts, getWorkoutsForDay, loading }
+  return { currentWorkouts, getWorkoutsForDay, loading, error, refetch }
 }

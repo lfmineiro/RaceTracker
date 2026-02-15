@@ -1,3 +1,4 @@
+import React from "react";
 import DayColumn from "./DayColumn";
 import { useWeeklyWourkouts } from "../../hooks/useWeeklyWorkouts";
 
@@ -11,9 +12,19 @@ const days = [
   "Sunday",
 ];
 
-const WeeklyCalendar = () => {
-  const { getWorkoutsForDay, loading } = useWeeklyWourkouts()
+interface Props {
+  refreshTrigger?: number;
+}
 
+const WeeklyCalendar = ({ refreshTrigger }: Props) => {
+  const { getWorkoutsForDay, loading, refetch } = useWeeklyWourkouts()
+
+  React.useEffect(() => {
+    if (refreshTrigger) {
+      refetch();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [refreshTrigger]);
 
   return (
     <div className="bg-white rounded-2xl shadow-sm border border-slate-200 p-6">

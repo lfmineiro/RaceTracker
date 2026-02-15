@@ -1,13 +1,14 @@
-import axios from 'axios'
 import { X } from "lucide-react";
 import { useState } from "react";
-import type { WorkoutCreateInput } from '../../types/workout'
+import type { WorkoutCreateInput } from '../../types/workout';
+import { WorkoutService } from '../../services/workoutService';
 
 interface Props {
   onClose: () => void;
+  onSuccess?: () => void;
 }
 
-const WorkoutModal = ({ onClose }: Props) => {
+const WorkoutModal = ({ onClose, onSuccess }: Props) => {
 
   const [workoutData, setWorkoutData] = useState<WorkoutCreateInput>({
     date: "",
@@ -40,20 +41,18 @@ const WorkoutModal = ({ onClose }: Props) => {
     setError(null);
 
     try {
-      const payload = {
-        ...workoutData,
-        userId: "12345"
-      };
+      await WorkoutService.create(workoutData);
 
-      // console.log("Enviando workout para backend:", payload);
-
-      await axios.post("http://localhost:3000/api/workouts", payload);
-
-      onClose();
+      if (onSuccess) {
+        onSuccess();
+      } else {
+        onClose();
+      }
 
     } catch (err: unknown) { 
-      if (axios.isAxiosError(err)) {
-        const message = err.response?.data?.message || err.message || "Erro ao criar treino";
+      if (err && typeof err === 'object' && 'response' in err) {
+        const axiosError = err as { response?: { data?: { message?: string } }; message?: string };
+        const message = axiosError.response?.data?.message || axiosError.message || "Erro ao criar treino";
         setError(message);
       } else if (err instanceof Error) {
         setError(err.message);

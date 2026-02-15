@@ -6,7 +6,13 @@ import { useCurrentWeek } from "../hooks/useCurrentWeek";
 
 const Schedule = () => {
   const [openModal, setOpenModal] = useState(false);
+  const [refreshTrigger, setRefreshTrigger] = useState(0);
   const {startOfWeek,endOfWeek} = useCurrentWeek()
+
+  const handleWorkoutCreated = () => {
+    setOpenModal(false);
+    setRefreshTrigger(prev => prev + 1);
+  };
 
   return (
     <main className="flex-1 bg-slate-100 min-h-screen p-8">
@@ -29,9 +35,14 @@ const Schedule = () => {
         </button>
       </div>
 
-      <WeeklyCalendar />
+      <WeeklyCalendar refreshTrigger={refreshTrigger} />
 
-      {openModal && <WorkoutModal onClose={() => setOpenModal(false)} />}
+      {openModal && (
+        <WorkoutModal 
+          onClose={() => setOpenModal(false)}
+          onSuccess={handleWorkoutCreated}
+        />
+      )}
     </main>
   );
 };
