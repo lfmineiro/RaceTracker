@@ -1,17 +1,15 @@
-import axios from "axios";
 import type { WorkoutCreateInput } from "../types/workout";
-
-const API_URL = "http://localhost:3000/api/workouts"
+import { api } from './api';
 
 export const WorkoutService = {
   getAll: async (): Promise<WorkoutCreateInput[]> => {
-  const response = await axios.get(API_URL);
-  return response.data
-},
+    const response = await api.get('/workouts');
+    return response.data;
+  },
 
   create: async (data: WorkoutCreateInput) => {
-    const response = await axios.post(API_URL, data);
-    return response.data
+    const response = await api.post('/workouts', data);
+    return response.data;
   }
 };
 
