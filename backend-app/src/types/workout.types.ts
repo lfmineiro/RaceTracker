@@ -1,5 +1,5 @@
 export type WorkoutCreateInput = {
-  userId: string;
+  userId?: string;
   date: Date | string;
   type: string;
   title: string;
