@@ -1,6 +1,7 @@
 import { Home, Calendar, Flag, Settings } from "lucide-react";
 import React from "react";
 import { Link, useLocation } from "react-router-dom";
+import UserInfo from "./UserInfo";
 
 interface SidebarItemProps {
   icon: React.ReactNode;
@@ -30,6 +31,7 @@ const SidebarItem: React.FC<SidebarItemProps> = ({
 
 const Sidebar: React.FC = () => {
   const location = useLocation();
+
   return (
     <aside className="h-screen w-64 bg-slate-900 flex flex-col justify-between">
       <div>
@@ -47,7 +49,8 @@ const Sidebar: React.FC = () => {
 
       {/* Bottom button */}
       <div className="p-4">
-        <button className="w-full bg-orange-500 hover:bg-orange-600 transition-colors text-white py-2 rounded-xl font-medium">
+        <UserInfo />
+        <button className="w-full bg-orange-500 hover:bg-orange-600 transition-colors text-white py-2 rounded-xl font-medium cursor-pointer">
           Connect Strava
         </button>
       </div>
