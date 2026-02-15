@@ -45,7 +45,7 @@ const WorkoutModal = ({ onClose }: Props) => {
         userId: "12345"
       };
 
-      console.log("Enviando workout para backend:", payload);
+      // console.log("Enviando workout para backend:", payload);
 
       await axios.post("http://localhost:3000/api/workouts", payload);
 
