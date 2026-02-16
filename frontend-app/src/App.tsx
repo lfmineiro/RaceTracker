@@ -6,6 +6,7 @@ import Register from './pages/Register';
 import PrivateRoute from './components/PrivateRoute';
 import { BrowserRouter as Router, Routes, Route, Outlet } from 'react-router-dom';
 import { AuthProvider } from './contexts/AuthProvider';
+import Races from './pages/Races';
 
 function App() {
   return (
@@ -21,6 +22,7 @@ function App() {
             <Route element={<AppLayout />}>
               <Route path="/" element={<Dashboard />} />
               <Route path="/schedule" element={<Schedule />} />
+              <Route path="/races" element={<Races />} /> 
             </Route>
           </Route>
         </Routes>
