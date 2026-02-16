@@ -19,3 +19,26 @@ export const isDateInRange = (date: Date, start: Date, end: Date): boolean => {
 
   return target >= s && target <= e;
 };
+
+export const formatDate = (dateString: string) => {
+  const date = new Date(dateString);
+  return {
+    day: date.getDate(),
+    month: date.toLocaleString("en-US", { month: "short" }).toUpperCase(),
+  };
+};
+
+export const formatSecondsToTime = (seconds?: number): string => {
+  if (!seconds) return "Not set";
+  const h = Math.floor(seconds / 3600);
+  const m = Math.floor((seconds % 3600) / 60);
+  const s = seconds % 60;
+  return [h, m, s].map(v => v.toString().padStart(2, "0")).join(":");
+};
+
+ export const formatTimeToSeconds = (timeString: string) => {
+    const parts = timeString.split(":");
+    if (parts.length !== 3) return undefined;
+    const [hours, minutes, seconds] = parts.map(Number);
+    return hours * 3600 + minutes * 60 + seconds;
+  };
