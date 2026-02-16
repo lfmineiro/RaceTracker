@@ -8,7 +8,7 @@ import {
 
 const Dashboard = () => {
   return (
-      <main className="flex-1 mr-10">
+      <main className="flex-1 mr-10 px-4">
           <div className="m-8 flex justify-between items-center">
           <div>
             <h1 className="text-3xl font-bold text-slate-800">

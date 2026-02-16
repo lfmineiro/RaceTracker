@@ -13,9 +13,6 @@ if (!process.env.JWT_SECRET) {
 const JWT_SECRET: string = process.env.JWT_SECRET;
 const SALT_ROUNDS = 10;
 
-/**
- * Register - Cria novo usuário com senha hash
- */
 export const register = async (req: Request, res: Response): Promise<Response> => {
   try {
     const { name, email, password }: RegisterInput = req.body;
