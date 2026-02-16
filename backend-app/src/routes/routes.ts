@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { createWorkout, getWorkouts } from "../controllers/workoutController.js";
+import { createWorkout, deleteWorkout, getWorkouts, updateWorkout } from "../controllers/workoutController.js";
 import { createUser, deleteUser, getUserById, getUsers, updateUser } from "../controllers/userController.js";
 import { createRace, deleteRace, getRaces, updateRace } from "../controllers/raceController.js";
 import { authMiddleware } from "../middlewares/authMiddleware.js";
@@ -9,6 +9,8 @@ const router = Router();
 // Workout routes (protected)
 router.get('/workouts', authMiddleware, getWorkouts);
 router.post('/workouts', authMiddleware, createWorkout);
+router.put('/workouts/:id', authMiddleware, updateWorkout);
+router.delete('/workouts/:id', authMiddleware, deleteWorkout);
 
 // Race routes (protected)
 router.get('/races', authMiddleware, getRaces);
