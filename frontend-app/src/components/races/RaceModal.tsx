@@ -3,83 +3,68 @@ import { Modal } from "../ui/Modal";
 import { FormField } from "../ui/FormField";
 import { FormSelect } from "../ui/FormSelect";
 import { Button } from "../ui/Button";
-import type { RaceCreateInput } from "../../types/race";
+import type { Race, RaceCreateInput } from "../../types/race";
 import { RaceService } from "../../services/raceService";
-import { formatTimeToSeconds } from "../../utils/dateUtils";
+import { formatTimeToSeconds, formatSecondsToTime } from "../../utils/dateUtils";
+import { useEntityForm } from "../../hooks/useEntityForm";
+import { mergeEntityDataForEdit } from "../../utils/formUtils";
 
 interface Props {
+  race?: Race | null;
   onClose: () => void;
   onSuccess?: () => void;
 }
 
-const RaceCreateModal = ({ onClose, onSuccess }: Props) => {
-  const [raceData, setRaceData] = useState<RaceCreateInput>({
-    name: "",
-    date: "",
-    distance: 0,
-    priorityLevel: "B",
-    goalTimeSeconds: undefined,
-    resultTimeSeconds: undefined,
-  });
-  const [goalTimeInput, setGoalTimeInput] = useState<string>("");
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+const INITIAL_RACE_DATA: RaceCreateInput = {
+  name: "",
+  date: "",
+  distance: 0,
+  priorityLevel: "B",
+  goalTimeSeconds: undefined,
+  resultTimeSeconds: undefined,
+};
 
-  const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
-  ) => {
-    const { name, value } = e.target;
-    setRaceData((prev) => ({
-      ...prev,
-      [name]:
-        name === "distance" || name === "goalTimeSeconds" || name === "resultTimeSeconds"
-          ? value === "" ? undefined : Number(value)
-          : value,
-    }));
+const NUMBER_FIELDS = ["distance", "goalTimeSeconds", "resultTimeSeconds"];
+
+const RaceCreateModal = ({ race, onClose, onSuccess }: Props) => {
+  const [goalTimeInput, setGoalTimeInput] = useState<string>("");
+
+  const {
+    formData: raceData,
+    loading,
+    error,
+    isEditing,
+    handleNumberChange,
+    handleSubmit: handleFormSubmit,
+  } = useEntityForm<RaceCreateInput, Race>({
+    initialData: INITIAL_RACE_DATA,
+    entity: race,
+    service: RaceService,
+    onSuccess,
+    onClose,
+    prepareDataForEdit: (entity) => {
+      // Update goal time input for display
+      if (entity.goalTimeSeconds) {
+        setGoalTimeInput(formatSecondsToTime(entity.goalTimeSeconds));
+      }
+      return mergeEntityDataForEdit(INITIAL_RACE_DATA, entity);
+    },
+    prepareDataForSubmit: (data) => ({
+      ...data,
+      goalTimeSeconds: formatTimeToSeconds(goalTimeInput),
+    }),
+  });
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+    handleNumberChange(e, NUMBER_FIELDS);
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setLoading(true);
-    setError(null);
-
-    try {
-      const goalSeconds = formatTimeToSeconds(goalTimeInput);
-      const finalData = {
-        ...raceData,
-        goalTimeSeconds: goalSeconds
-      };
-
-      await RaceService.create(finalData);
-
-      if (onSuccess) {
-        onSuccess();
-      } else {
-        onClose();
-      }
-    } catch (err: unknown) {
-      if (err && typeof err === "object" && "response" in err) {
-        const axiosError = err as {
-          response?: { data?: { message?: string } };
-          message?: string;
-        };
-        const message =
-          axiosError.response?.data?.message ||
-          axiosError.message ||
-          "Error creating race";
-        setError(message);
-      } else if (err instanceof Error) {
-        setError(err.message);
-      } else {
-        setError("An unknown error occurred");
-      }
-    } finally {
-      setLoading(false);
-    }
+  const handleSubmit = (e: React.FormEvent) => {
+    handleFormSubmit(e);
   };
 
   return (
-    <Modal isOpen={true} onClose={onClose} title="Create New Race">
+    <Modal isOpen={true} onClose={onClose} title={isEditing ? "Edit Race" : "Create New Race"}>
       <form className="space-y-4" onSubmit={handleSubmit}>
         <FormField
           label="Race Name"
@@ -145,7 +130,7 @@ const RaceCreateModal = ({ onClose, onSuccess }: Props) => {
           isLoading={loading}
           className="w-full"
         >
-          Create Race
+          {isEditing ? "Update Race" : "Create Race"}
         </Button>
       </form>
     </Modal>
