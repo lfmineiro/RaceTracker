@@ -3,15 +3,39 @@ import { Plus } from "lucide-react";
 import WeeklyCalendar from "../components/schedule/WeeklyCalendar";
 import WorkoutModal from "../components/schedule/WorkoutModal";
 import { useCurrentWeek } from "../hooks/useCurrentWeek";
+import { WorkoutService } from "../services/workoutService";
+import type { Workout } from "../types/workout";
 
 const Schedule = () => {
   const [openModal, setOpenModal] = useState(false);
+  const [editingWorkout, setEditingWorkout] = useState<Workout | null>(null);
   const [refreshTrigger, setRefreshTrigger] = useState(0);
   const {startOfWeek,endOfWeek} = useCurrentWeek()
 
   const handleWorkoutCreated = () => {
     setOpenModal(false);
+    setEditingWorkout(null);
     setRefreshTrigger(prev => prev + 1);
+  };
+
+  const handleEditWorkout = (workout: Workout) => {
+    setEditingWorkout(workout);
+    setOpenModal(true);
+  };
+
+  const handleDeleteWorkout = async (id: string) => {
+    try {
+      await WorkoutService.delete(id);
+      setRefreshTrigger(prev => prev + 1);
+    } catch (error) {
+      console.error('Error deleting workout:', error);
+      alert('Failed to delete workout');
+    }
+  };
+
+  const handleCloseModal = () => {
+    setOpenModal(false);
+    setEditingWorkout(null);
   };
 
   return (
@@ -35,11 +59,16 @@ const Schedule = () => {
         </button>
       </div>
 
-      <WeeklyCalendar refreshTrigger={refreshTrigger} />
+      <WeeklyCalendar 
+        refreshTrigger={refreshTrigger}
+        onEditWorkout={handleEditWorkout}
+        onDeleteWorkout={handleDeleteWorkout}
+      />
 
       {openModal && (
         <WorkoutModal 
-          onClose={() => setOpenModal(false)}
+          workout={editingWorkout || undefined}
+          onClose={handleCloseModal}
           onSuccess={handleWorkoutCreated}
         />
       )}

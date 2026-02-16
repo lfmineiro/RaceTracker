@@ -1,73 +1,56 @@
-import { useState } from "react";
 import { Modal } from "../ui/Modal";
 import { FormField } from "../ui/FormField";
 import { FormSelect } from "../ui/FormSelect";
 import { FormTextarea } from "../ui/FormTextarea";
 import { Button } from "../ui/Button";
-import type { WorkoutCreateInput } from '../../types/workout';
+import type { Workout, WorkoutCreateInput } from '../../types/workout';
 import { WorkoutService } from '../../services/workoutService';
+import { useEntityForm } from '../../hooks/useEntityForm';
+import { mergeEntityDataForEdit } from '../../utils/formUtils';
 
 interface Props {
+  workout?: Workout;
   onClose: () => void;
   onSuccess?: () => void;
 }
 
-const WorkoutModal = ({ onClose, onSuccess }: Props) => {
-  const [workoutData, setWorkoutData] = useState<WorkoutCreateInput>({
-    date: "",
-    type: "Easy Run",
-    title: "",
-    description: "",
-    plannedDistance: undefined,
-    plannedDuration: undefined,
-    actualDistance: undefined,
-    actualDuration: undefined,
-    status: "Pending",
+const INITIAL_WORKOUT_DATA: WorkoutCreateInput = {
+  date: "",
+  type: "Easy Run",
+  title: "",
+  description: "",
+  plannedDistance: undefined,
+  plannedDuration: undefined,
+  actualDistance: undefined,
+  actualDuration: undefined,
+  status: "Pending",
+};
+
+const NUMBER_FIELDS = ["plannedDistance", "plannedDuration", "actualDistance", "actualDuration"];
+
+const WorkoutModal = ({ workout, onClose, onSuccess }: Props) => {
+  const {
+    formData: workoutData,
+    loading,
+    error,
+    isEditing,
+    handleNumberChange,
+    handleSubmit,
+  } = useEntityForm<WorkoutCreateInput, Workout>({
+    initialData: INITIAL_WORKOUT_DATA,
+    entity: workout,
+    service: WorkoutService,
+    onSuccess,
+    onClose,
+    prepareDataForEdit: (entity) => mergeEntityDataForEdit(INITIAL_WORKOUT_DATA, entity),
   });
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
-    const { name, value } = e.target;
-    setWorkoutData(prev => ({
-      ...prev,
-      [name]:
-        name === "plannedDistance" || name === "plannedDuration" || name === "actualDistance" || name === "actualDuration"
-          ? value === "" ? undefined : Number(value)
-          : value
-    }));
-  };
-  
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setLoading(true);
-    setError(null);
-
-    try {
-      await WorkoutService.create(workoutData);
-
-      if (onSuccess) {
-        onSuccess();
-      } else {
-        onClose();
-      }
-    } catch (err: unknown) { 
-      if (err && typeof err === 'object' && 'response' in err) {
-        const axiosError = err as { response?: { data?: { message?: string } }; message?: string };
-        const message = axiosError.response?.data?.message || axiosError.message || "Error creating workout";
-        setError(message);
-      } else if (err instanceof Error) {
-        setError(err.message);
-      } else {
-        setError("An unknown error occurred");
-      }
-    } finally {
-      setLoading(false);
-    }
+    handleNumberChange(e as React.ChangeEvent<HTMLInputElement | HTMLSelectElement>, NUMBER_FIELDS);
   };
 
   return (
-    <Modal isOpen={true} onClose={onClose} title="Create / Edit Workout">
+    <Modal isOpen={true} onClose={onClose} title={isEditing ? "Edit Workout" : "Create Workout"}>
       <form className="space-y-4" onSubmit={handleSubmit}>
         <FormField
           label="Date"
@@ -155,7 +138,7 @@ const WorkoutModal = ({ onClose, onSuccess }: Props) => {
           isLoading={loading}
           className="w-full"
         >
-          Save Workout
+          {isEditing ? "Update Workout" : "Create Workout"}
         </Button>
       </form>
     </Modal>

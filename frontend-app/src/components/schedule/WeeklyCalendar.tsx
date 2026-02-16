@@ -1,6 +1,7 @@
 import React from "react";
 import DayColumn from "./DayColumn";
 import { useWeeklyWourkouts } from "../../hooks/useWeeklyWorkouts";
+import type { Workout } from "../../types/workout";
 
 const days = [
   "Monday",
@@ -14,9 +15,11 @@ const days = [
 
 interface Props {
   refreshTrigger?: number;
+  onEditWorkout?: (workout: Workout) => void;
+  onDeleteWorkout?: (id: string) => void;
 }
 
-const WeeklyCalendar = ({ refreshTrigger }: Props) => {
+const WeeklyCalendar = ({ refreshTrigger, onEditWorkout, onDeleteWorkout }: Props) => {
   const { getWorkoutsForDay, loading, refetch } = useWeeklyWourkouts()
 
   React.useEffect(() => {
@@ -33,7 +36,13 @@ const WeeklyCalendar = ({ refreshTrigger }: Props) => {
       ) : (
         <div className="grid grid-cols-7 gap-4">
           {days.map((day) => (
-            <DayColumn key={day} day={day} workouts={getWorkoutsForDay(day)} />
+            <DayColumn 
+              key={day} 
+              day={day} 
+              workouts={getWorkoutsForDay(day)}
+              onEditWorkout={onEditWorkout}
+              onDeleteWorkout={onDeleteWorkout}
+            />
           ))}
         </div>
       )}
