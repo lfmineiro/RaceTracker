@@ -1,4 +1,4 @@
-export type WorkoutCreateInput = {
+export interface WorkoutCreateInput {
   date: string;
   type: string;
   title: string;
@@ -9,3 +9,8 @@ export type WorkoutCreateInput = {
   actualDuration?: number;
   status?: string;
 };
+
+export interface Workout extends WorkoutCreateInput {
+  id: string
+  userId: string
+} 
