@@ -1,10 +1,8 @@
-import { PrismaClient } from '@prisma/client';
 import type { Response } from 'express';
 import type { WorkoutCreateInput } from '../types/workout.types.js';
 import type { AuthRequest } from '../types/auth.types.js';
 import { validateAuth, validateRequiredFields, validateDate, handleError } from '../utils/controllerHelpers.js';
-
-const prisma = new PrismaClient();
+import { prisma } from '../lib/prisma.js';
 
 export const getWorkouts = async (req: AuthRequest, res: Response) => {
   try {

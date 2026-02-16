@@ -1,8 +1,6 @@
-import { PrismaClient } from "@prisma/client";
 import type { Request, Response } from "express";
 import type { UserCreateInput, UserUpdateInput } from "../types/user.types.js";
-
-const prisma = new PrismaClient();
+import { prisma } from '../lib/prisma.js';
 
 export const getUsers = async (req: Request, res: Response) => {
   const users = await prisma.user.findMany();

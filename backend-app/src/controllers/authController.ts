@@ -1,10 +1,8 @@
-import { PrismaClient } from '@prisma/client';
 import type { Request, Response } from 'express';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import type { RegisterInput, LoginInput, AuthResponse, JWTPayload, AuthRequest } from '../types/auth.types.js';
-
-const prisma = new PrismaClient();
+import { prisma } from '../lib/prisma.js';
 
 if (!process.env.JWT_SECRET) {
   throw new Error('❌ FATAL ERROR: JWT_SECRET is not defined in environment variables. Server cannot start.');

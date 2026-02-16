@@ -1,10 +1,8 @@
-import { PrismaClient } from '@prisma/client';
 import type { Response } from 'express';
 import type { RaceCreateInput, RaceUpdateInput } from '../types/race.types.js';
 import type { AuthRequest } from '../types/auth.types.js';
 import { validateAuth, validateRequiredFields, validateDate, handleError, validateOwnership } from '../utils/controllerHelpers.js';
-
-const prisma = new PrismaClient();
+import { prisma } from '../lib/prisma.js';
 
 export const getRaces = async (req: AuthRequest, res: Response) => {
   try {

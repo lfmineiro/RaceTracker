@@ -1,7 +1,7 @@
 # 🚀 RaceTracker Project Roadmap
 
 ## 🎨 Frontend (UI/UX)
-- [ ] **Input Masking:** Implement input masking for Date and Time fields in Modals to improve user experience (e.g., prevent manual formatting errors).
+- [ ] **Input Masking:** Implement input masking for Date and Time fields in Modals to improve user experience.
 - [ ] **UX Polish:** Update input placeholders to be more intuitive and guide the user on the expected format.
 - [ ] **Schedule Navigation:** Implement logic to navigate between weeks (Previous/Next) in the Schedule view. Currently, it only shows the current week, making past workouts inaccessible.
 - [ ] **Dashboard Visualization:**
@@ -13,5 +13,5 @@
 - [ ] **CRUD Actions:** Add "Edit" and "Delete" functionality to `RaceCard` and `WorkoutCard`.
 
 ## ⚙️ Backend & Database
-- [ ] **Prisma Singleton:** Implement the Singleton Pattern for Prisma Client to prevent multiple instances during hot-reloading and manage database connections efficiently.
+- [ x ] **Prisma Singleton:** Implement the Singleton Pattern for Prisma Client to prevent multiple instances during hot-reloading and manage database connections efficiently.
 - [ ] **Database Migration:** Migrate from SQLite to PostgreSQL (running on Docker) to prepare for production environment.
