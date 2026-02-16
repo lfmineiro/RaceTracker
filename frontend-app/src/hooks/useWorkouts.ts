@@ -1,32 +1,15 @@
-import { useEffect, useState, useCallback } from "react"
+import { useCallback } from "react"
 import { WorkoutService } from "../services/workoutService"
-import type { WorkoutCreateInput } from "../types/workout"
+import { useFetch } from "./useFetch";
 
 export const useWorkouts = () => {
-  const [workouts, setWorkouts] = useState<WorkoutCreateInput[]>([])
-  const [loading, setLoading] = useState(true)
-  const [error, setError] = useState<string | null>(null)
 
-  const fetchWorkouts = useCallback(async () => {
-    try {
-      setLoading(true)
-      setError(null)
-      const data = await WorkoutService.getAll()
-      setWorkouts(data)
-    } catch (err: unknown) {
-      console.error('Error fetching workouts:', err)
-      const errorMessage = err && typeof err === 'object' && 'response' in err
-        ? (err as { response?: { data?: { message?: string } } }).response?.data?.message
-        : 'Failed to fetch workouts';
-      setError(errorMessage || 'Failed to fetch workouts')
-    } finally {
-      setLoading(false)
-    }
-  }, [])
+  const fetcher = useCallback(() => WorkoutService.getAll(), [])
 
-  useEffect(() => {
-    fetchWorkouts()
-  }, [fetchWorkouts])
+  const { data: workouts, loading, error, refetch } = useFetch(fetcher);
 
-  return { workouts, loading, error, refetch: fetchWorkouts }
+  return { workouts: workouts || [], 
+    loading, 
+    error, 
+    refetch }
 }
