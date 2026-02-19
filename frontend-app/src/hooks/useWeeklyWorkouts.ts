@@ -1,13 +1,15 @@
 import { useMemo } from "react"
 import { useWorkouts } from "./useWorkouts"
-import { useCurrentWeek } from "./useCurrentWeek"
 import { getDayName, isDateInRange, parseISOToLocalDate } from "../utils/dateUtils"
 import type { Workout } from "../types/workout"
 
-export const useWeeklyWourkouts = () => {
+interface UseWeeklyWorkoutsProps {
+  startOfWeek: Date;
+  endOfWeek: Date;
+}
+
+export const useWeeklyWourkouts = ({ startOfWeek, endOfWeek }: UseWeeklyWorkoutsProps) => {
   const { workouts, loading, error, refetch } = useWorkouts()
-  const { startOfWeek, endOfWeek } = useCurrentWeek()
- 
 
   const currentWorkouts = useMemo(() => {
     return workouts.filter((workout) => {
