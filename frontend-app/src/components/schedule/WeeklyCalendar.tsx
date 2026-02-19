@@ -14,13 +14,15 @@ const days = [
 ];
 
 interface Props {
+  startOfWeek: Date;
+  endOfWeek: Date;
   refreshTrigger?: number;
   onEditWorkout?: (workout: Workout) => void;
   onDeleteWorkout?: (id: string) => void;
 }
 
-const WeeklyCalendar = ({ refreshTrigger, onEditWorkout, onDeleteWorkout }: Props) => {
-  const { getWorkoutsForDay, loading, refetch } = useWeeklyWourkouts()
+const WeeklyCalendar = ({ startOfWeek, endOfWeek, refreshTrigger, onEditWorkout, onDeleteWorkout }: Props) => {
+  const { getWorkoutsForDay, loading, refetch } = useWeeklyWourkouts({ startOfWeek, endOfWeek })
 
   React.useEffect(() => {
     if (refreshTrigger) {

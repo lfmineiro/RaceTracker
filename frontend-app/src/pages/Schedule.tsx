@@ -2,7 +2,8 @@ import { useState } from "react";
 import { Plus } from "lucide-react";
 import WeeklyCalendar from "../components/schedule/WeeklyCalendar";
 import WorkoutModal from "../components/schedule/WorkoutModal";
-import { useCurrentWeek } from "../hooks/useCurrentWeek";
+import WeekNavigator from "../components/schedule/WeekNavigator";
+import { useWeekNavigation } from "../hooks/useWeekNavigation";
 import { WorkoutService } from "../services/workoutService";
 import type { Workout } from "../types/workout";
 
@@ -10,7 +11,15 @@ const Schedule = () => {
   const [openModal, setOpenModal] = useState(false);
   const [editingWorkout, setEditingWorkout] = useState<Workout | null>(null);
   const [refreshTrigger, setRefreshTrigger] = useState(0);
-  const {startOfWeek,endOfWeek} = useCurrentWeek()
+  
+  const {
+    startOfWeek,
+    endOfWeek,
+    isViewingCurrentWeek,
+    goToPreviousWeek,
+    goToNextWeek,
+    goToCurrentWeek,
+  } = useWeekNavigation();
 
   const handleWorkoutCreated = () => {
     setOpenModal(false);
@@ -43,7 +52,7 @@ const Schedule = () => {
       <div className="flex justify-between items-center mb-8">
         <div>
           <h1 className="text-3xl font-bold text-slate-800">
-            My Schedule - Week {startOfWeek.toLocaleDateString()} to {endOfWeek.toLocaleDateString()} 
+            My Training Schedule
           </h1>
           <p className="text-slate-500 mt-1">
             Plan and track your weekly training sessions
@@ -52,14 +61,26 @@ const Schedule = () => {
 
         <button
           onClick={() => setOpenModal(true)}
-          className="flex items-center gap-2 bg-indigo-600 hover:bg-indigo-700 text-white px-5 py-3 rounded-xl font-medium transition"
+          className="flex cursor-pointer items-center gap-2 bg-indigo-600 hover:bg-indigo-700 text-white px-5 py-3 rounded-xl font-medium transition"
         >
           <Plus size={18} />
           New Workout
         </button>
       </div>
 
+      <WeekNavigator
+        startDate={startOfWeek}
+        endDate={endOfWeek}
+        onPrevious={goToPreviousWeek}
+        onNext={goToNextWeek}
+        onToday={goToCurrentWeek}
+        isCurrentWeek={isViewingCurrentWeek}
+      />
+
+      {/* Weekly Calendar */}
       <WeeklyCalendar 
+        startOfWeek={startOfWeek}
+        endOfWeek={endOfWeek}
         refreshTrigger={refreshTrigger}
         onEditWorkout={handleEditWorkout}
         onDeleteWorkout={handleDeleteWorkout}
