@@ -19,6 +19,6 @@ O objetivo é centralizar o planejamento e comparar com a execução real vinda 
 racetracker/
 ├── backend-app/       # API Express + Prisma
 ├── frontend-app/      # React + Vite
-├── docker-compose.yml # Banco de dados PostgreSQL
+├── docker-compose.yml # Banco de dados SQLite
 └── package.json       # Gerenciador do Workspace
 ```
